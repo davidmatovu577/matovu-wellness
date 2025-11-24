@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>💚 Matovu Wellness</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="wellness_icon.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 70px;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .mood-display {
+            text-align: center;
+            font-size: 48px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            margin: 10px 0;
+        }
+
+        .mood-label {
+            font-size: 18px;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            margin: 15px 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .input-field {
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .input-field:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            color: #667eea;
+        }
+
+        .install-prompt {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .install-prompt.show {
+            display: block;
+        }
+
+        .install-prompt button {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="install-prompt" id="installPrompt">
+        <p>📱 Install Matovu Wellness on your device!</p>
+        <button onclick="installApp()">Install</button>
+        <button onclick="dismissInstall()">Later</button>
+    </div>
+
+    <div class="app-container">
+        <div class="header">
+            <h1>💚 Matovu Wellness</h1>
+            <p>Track your health & fitness journey</p>
+        </div>
+
+        <div class="content">
+            <!-- Log Tab -->
+            <div class="tab-content active" id="log-tab">
+                <div class="section">
+                    <div class="section-title">How's your mood?</div>
+                    <div class="mood-display">
+                        <div id="mood-emoji">😊</div>
+                        <div class="mood-label" id="mood-label">Neutral (5/10)</div>
+                    </div>
+                    <input type="range" id="mood-slider" min="1" max="10" value="5">
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Health Metrics</div>
+                    <div class="input-group">
+                        <div>
+                            <label>😴 Sleep (hours)</label>
+                            <input type="number" class="input-field" id="sleep" value="7" min="0" max="24">
+                        </div>
+                        <div>
+                            <label>🏃 Exercise (min)</label>
+                            <input type="number" class="input-field" id="exercise" value="0" min="0">
+                        </div>
+                        <div>
+                            <label>💧 Water (glasses)</label>
+                            <input type="number" class="input-field" id="water" value="8" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Notes</div>
+                    <textarea id="notes" placeholder="How was your day?"></textarea>
+                </div>
+
+                <button class="btn" onclick="saveEntry()">💾 Save Entry</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div class="tab-content" id="dashboard-tab">
+                <div class="stats-grid" id="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">😊</div>
+                        <div class="stat-value" id="avg-mood">-</div>
+                        <div class="stat-label">Avg Mood</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">😴</div>
+                        <div class="stat-value" id="avg-sleep">-</div>
+                        <div class="stat-label">Avg Sleep</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🏃</div>
+                        <div class="stat-value" id="avg-exercise">-</div>
+                        <div class="stat-label">Avg Exercise</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📝</div>
+                        <div class="stat-value" id="total-entries">0</div>
+                        <div class="stat-label">Total Entries</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Recent Entries</div>
+                    <div id="recent-entries">No entries yet. Start logging!</div>
+                </div>
+            </div>
+
+            <!-- Training Tab -->
+            <div class="tab-content" id="training-tab">
+                <div class="section">
+                    <div class="section-title">🏋️ Quick Workouts</div>
+                    <button class="btn" onclick="alert('🏃 Running: 30 min cardio workout!')">🏃 Running</button>
+                    <button class="btn" onclick="alert('🧘 Yoga: 20 min flexibility session!')">🧘 Yoga</button>
+                    <button class="btn" onclick="alert('💪 Strength: 25 min muscle building!')">💪 Strength Training</button>
+                    <button class="btn" onclick="alert('🤸 HIIT: 15 min high intensity!')">🤸 HIIT Workout</button>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">💡 Wellness Tips</div>
+                    <p>✅ Aim for 7-9 hours of sleep</p>
+                    <p>✅ Exercise 30 minutes daily</p>
+                    <p>✅ Drink 8 glasses of water</p>
+                    <p>✅ Practice mindfulness</p>
+                    <p>✅ Eat balanced meals</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <button class="nav-btn active" onclick="switchTab('log')">📝</button>
+            <button class="nav-btn" onclick="switchTab('dashboard')">📊</button>
+            <button class="nav-btn" onclick="switchTab('training')">🏋️</button>
+        </div>
+    </div>
+
+    <script>
+        // PWA Install
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').classList.add('show');
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    deferredPrompt = null;
+                    document.getElementById('installPrompt').classList.remove('show');
+                });
+            }
+        }
+
+        function dismissInstall() {
+            document.getElementById('installPrompt').classList.remove('show');
+        }
+
+        // Mood slider
+        const moodEmojis = ['😢', '😟', '😐', '🙂', '😊', '😄', '😁', '🤗', '🥳', '🌟'];
+        const moodLabels = ['Very Bad', 'Bad', 'Poor', 'Okay', 'Neutral', 'Good', 'Great', 'Very Good', 'Excellent', 'Amazing'];
+
+        document.getElementById('mood-slider').addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            document.getElementById('mood-emoji').textContent = moodEmojis[value - 1];
+            document.getElementById('mood-label').textContent = `${moodLabels[value - 1]} (${value}/10)`;
+        });
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tab === 'dashboard') {
+                updateDashboard();
+            }
+        }
+
+        // Save entry
+        function saveEntry() {
+            const entry = {
+                date: new Date().toISOString().split('T')[0],
+                mood: parseInt(document.getElementById('mood-slider').value),
+                sleep: parseInt(document.getElementById('sleep').value),
+                exercise: parseInt(document.getElementById('exercise').value),
+                water: parseInt(document.getElementById('water').value),
+                notes: document.getElementById('notes').value,
+                timestamp: new Date().toISOString()
+            };
+
+            let entries = JSON.parse(localStorage.getItem('wellness_entries') || '[]');
+            entries.push(entry);
+            localStorage.setItem('wellness_entries', JSON.stringify(entries));
+
+            alert('✅ Entry saved successfully!');
+            document.getElementById('notes').value = '';
+            updateDashboard();
+        }
+
+        // Update dashboard
+        function updateDashboard() {
+            const entries = JSON.parse(localStorage.getItem('wellness_entries') || '[]');
+            
+            if (entries.length === 0) {
+                document.getElementById('avg-mood').textContent = '-';
+                document.getElementById('avg-sleep').textContent = '-';
+                document.getElementById('avg-exercise').textContent = '-';
+                document.getElementById('total-entries').textContent = '0';
+                document.getElementById('recent-entries').innerHTML = 'No entries yet. Start logging!';
+                return;
+            }
+
+            const avgMood = (entries.reduce((sum, e) => sum + e.mood, 0) / entries.length).toFixed(1);
+            const avgSleep = (entries.reduce((sum, e) => sum + e.sleep, 0) / entries.length).toFixed(1);
+            const avgExercise = Math.round(entries.reduce((sum, e) => sum + e.exercise, 0) / entries.length);
+
+            document.getElementById('avg-mood').textContent = avgMood + '/10';
+            document.getElementById('avg-sleep').textContent = avgSleep + 'h';
+            document.getElementById('avg-exercise').textContent = avgExercise + 'm';
+            document.getElementById('total-entries').textContent = entries.length;
+
+            const recent = entries.slice(-5).reverse();
+            document.getElementById('recent-entries').innerHTML = recent.map(e => 
+                `<p><strong>${e.date}</strong>: Mood ${e.mood}/10, Sleep ${e.sleep}h</p>`
+            ).join('');
+        }
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        // Initial dashboard update
+        updateDashboard();
+    </script>
+</body>
+</html>
